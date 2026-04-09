@@ -58,3 +58,5 @@ debug.log
 
 
 /generated/prisma
+
+/prisma/generated/prisma
