@@ -12,26 +12,32 @@ RUN apt-get update && \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
+# Enable Corepack
+RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
+
 # Copy package files
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 COPY prisma ./prisma/
 
 # Install dependencies
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY . .
 
 # Generate Prisma client
-RUN npm run prisma:generate
+RUN pnpm prisma:generate
 
 # Build TypeScript
-RUN npm run build
+RUN pnpm build
 
 # Production stage
 FROM node:20-bookworm-slim
 
 WORKDIR /app
+
+# Enable Corepack
+RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
 
 # Install wkhtmltopdf runtime dependencies
 RUN apt-get update && \
@@ -43,14 +49,14 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy package files
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 
 # Install production dependencies only
-RUN npm ci --only=production
+RUN pnpm install --prod --frozen-lockfile
 
 # Copy Prisma schema and generate client
 COPY prisma ./prisma/
-RUN npm run prisma:generate
+RUN pnpm prisma:generate
 
 # Copy built files from builder
 COPY --from=builder /app/dist ./dist

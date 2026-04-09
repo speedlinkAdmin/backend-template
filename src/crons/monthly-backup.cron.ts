@@ -1,3 +1,4 @@
+import cron from 'node-cron';
 import { ProcessManager } from '../child-processes/process-manager';
 import { logger } from '../lib/logger';
 import { env } from '../configs/env.config';
@@ -52,3 +53,13 @@ export async function runBackupJob() {
     throw error;
   }
 }
+
+// Schedule the job to run at 00:00 on the 1st day of every month
+cron.schedule('0 0 1 * *', async () => {
+  logger.info('⏰ Running scheduled monthly database backup cron...');
+  try {
+    await runBackupJob();
+  } catch (error) {
+    logger.error('❌ Scheduled monthly backup cron failed:', error);
+  }
+});

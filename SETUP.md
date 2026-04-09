@@ -3,7 +3,7 @@
 ## Step 1: Install Dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 ## Step 2: Configure Environment
@@ -25,19 +25,19 @@ Make sure PostgreSQL is running, then:
 
 ```bash
 # Generate Prisma Client
-npm run prisma:generate
+pnpm run prisma:generate
 
 # Run database migrations
-npm run prisma:migrate
+pnpm run prisma:migrate
 
 # (Optional) Open Prisma Studio to view your database
-npm run prisma:studio
+pnpm run prisma:studio
 ```
 
 ## Step 4: Start Development Server
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 The server will start at `http://localhost:3000`
@@ -74,8 +74,8 @@ You should get:
   - Mac/Linux: `lsof -ti:3000 | xargs kill -9`
 
 ### Prisma Client Not Generated
-- Run: `npm run prisma:generate`
-- If issues persist, delete `node_modules` and reinstall: `npm install`
+- Run: `pnpm run prisma:generate`
+- If issues persist, delete `node_modules` and reinstall: `pnpm install`
 
 ## Next Steps
 
@@ -89,24 +89,24 @@ You should get:
 
 ```bash
 # Development
-npm run dev              # Start dev server with hot reload
-npm run build            # Build for production
-npm start                # Start production server
+pnpm run dev              # Start dev server with hot reload
+pnpm run build            # Build for production
+pnpm start                # Start production server
 
 # Database
-npm run prisma:generate  # Generate Prisma Client
-npm run prisma:migrate   # Run migrations
-npm run prisma:studio    # Open Prisma Studio GUI
-npm run prisma:seed      # Seed database
+pnpm run prisma:generate  # Generate Prisma Client
+pnpm run prisma:migrate   # Run migrations
+pnpm run prisma:studio    # Open Prisma Studio GUI
+pnpm run prisma:seed      # Seed database
 
 # Testing
-npm test                 # Run tests
-npm run test:watch       # Run tests in watch mode
-npm run test:coverage    # Run tests with coverage
+pnpm test                 # Run tests
+pnpm run test:watch       # Run tests in watch mode
+pnpm run test:coverage    # Run tests with coverage
 
 # Code Quality
-npm run lint             # Check for linting errors
-npm run lint:fix         # Fix linting errors
+pnpm run lint             # Check for linting errors
+pnpm run lint:fix         # Fix linting errors
 ```
 
 ## Project Structure

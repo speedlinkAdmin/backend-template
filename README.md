@@ -49,7 +49,7 @@ src/
 
 - Node.js (v18 or higher)
 - PostgreSQL
-- npm or yarn
+- pnpm or yarn
 
 ### Installation
 
@@ -61,7 +61,7 @@ cd backend-template
 
 2. Install dependencies:
 ```bash
-npm install
+pnpm install
 ```
 
 3. Set up environment variables:
@@ -74,36 +74,36 @@ Edit `.env` and update the database connection string and other configurations.
 4. Set up the database:
 ```bash
 # Generate Prisma client
-npm run prisma:generate
+pnpm run prisma:generate
 
 # Run migrations
-npm run prisma:migrate
+pnpm run prisma:migrate
 
 # (Optional) Seed the database
-npm run prisma:seed
+pnpm run prisma:seed
 ```
 
 5. Start the development server:
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 The server will start at `http://localhost:3000`
 
 ## 📝 Available Scripts
 
-- `npm run dev` - Start development server with hot reload
-- `npm run build` - Build TypeScript to JavaScript
-- `npm start` - Start production server
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint errors
-- `npm test` - Run tests
-- `npm run test:watch` - Run tests in watch mode
-- `npm run test:coverage` - Run tests with coverage
-- `npm run prisma:generate` - Generate Prisma client
-- `npm run prisma:migrate` - Run database migrations
-- `npm run prisma:studio` - Open Prisma Studio
-- `npm run prisma:seed` - Seed the database
+- `pnpm run dev` - Start development server with hot reload
+- `pnpm run build` - Build TypeScript to JavaScript
+- `pnpm start` - Start production server
+- `pnpm run lint` - Run ESLint
+- `pnpm run lint:fix` - Fix ESLint errors
+- `pnpm test` - Run tests
+- `pnpm run test:watch` - Run tests in watch mode
+- `pnpm run test:coverage` - Run tests with coverage
+- `pnpm run prisma:generate` - Generate Prisma client
+- `pnpm run prisma:migrate` - Run database migrations
+- `pnpm run prisma:studio` - Open Prisma Studio
+- `pnpm run prisma:seed` - Seed the database
 
 ## 🔑 API Endpoints
 
@@ -148,17 +148,17 @@ The server will start at `http://localhost:3000`
 
 Run the test suite:
 ```bash
-npm test
+pnpm test
 ```
 
 Run tests in watch mode:
 ```bash
-npm run test:watch
+pnpm run test:watch
 ```
 
 Generate coverage report:
 ```bash
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 ## 🐳 Docker
@@ -179,7 +179,7 @@ This project uses Prisma ORM with PostgreSQL. The schema is located at `prisma/s
 
 To view and edit your database, use Prisma Studio:
 ```bash
-npm run prisma:studio
+pnpm run prisma:studio
 ```
 
 ## 🔒 Security

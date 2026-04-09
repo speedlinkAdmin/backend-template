@@ -59,7 +59,7 @@ services:
         condition: service_healthy
     networks:
       - app_network
-    command: npm run dev
+    command: pnpm run dev
     restart: unless-stopped
 
 networks:
