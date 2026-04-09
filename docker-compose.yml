@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # Redis Cache & Queue
+  redis:
+    image: redis:7-alpine
+    container_name: app_redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redispass}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  # Redis Commander (GUI for Redis)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: app_redis_commander
+    environment:
+      REDIS_HOSTS: local:redis:6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redispass}
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  # Node.js Application (Development)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app_server
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redispass}@redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redispass}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app/src          # Hot reload for development
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+      - /app/node_modules       # Prevent overwriting node_modules
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - app_network
+    command: npm run dev
+    restart: unless-stopped
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  redis_data:
