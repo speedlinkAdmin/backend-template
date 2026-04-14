@@ -13,6 +13,7 @@ export const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   PORT: z.string().default('3000'),
   CLIENT_URL: z.string().default('http://localhost:3000'),
+  SERVER_URL: z.string().default('http://localhost:3000'),
  
   // Database
   DATABASE_URL: z.string().default(''),
@@ -45,7 +46,7 @@ export const envSchema = z.object({
   LOG_LEVEL: z.string().default('info'),
   RATE_LIMIT_WINDOW_MS: z.number().default(900000),
   RATE_LIMIT_MAX_REQUESTS: z.number().default(100),
-  CORS_ORIGIN: z.string().default('http://localhost:3000'),
+  CORS_ORIGINS: z.string().default('http://localhost:3000'),
 
   // AWS
   AWS_REGION: z.string().default('us-east-1'),

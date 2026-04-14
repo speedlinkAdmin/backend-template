@@ -37,10 +37,11 @@
       "@workers/*": ["workers/*"],
       "@services/*": ["services/*"],
       "@lib": ["lib"],
-      "@lib/*": ["lib/*"]
+      "@lib/*": ["lib/*"],
+      "@docs/*": ["../docs/*"]
     },
     "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["src/**/*", "_prisma/admin.schema.prisma"],
+  "include": ["src/**/*", "docs/swagger.ts", "_prisma/admin.schema.prisma"],
   "exclude": ["node_modules", "dist", "_prisma"]
 }
