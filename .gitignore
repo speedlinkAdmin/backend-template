@@ -60,3 +60,9 @@ debug.log
 /generated/prisma
 
 /prisma/generated/prisma
+
+
+# only keep docker related files for development
+Dockerfile
+docker-compose.yml
+
