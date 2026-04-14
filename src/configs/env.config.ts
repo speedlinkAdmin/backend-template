@@ -34,6 +34,9 @@ export const envSchema = z.object({
   SMTP_USER: z.string(),
   SMTP_PASS: z.string(),
   EMAIL_FROM: z.string(),
+
+  // Resend
+  RESEND_API_KEY: z.string(),
   
   // App
   APP_NAME: z.string().default('My App'),
