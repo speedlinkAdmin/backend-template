@@ -1,0 +1,100 @@
+services:
+  # Redis Cache & Queue
+  redis:
+    image: redis:7-alpine
+    container_name: app_redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redispass}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--pass", "${REDIS_PASSWORD:-redispass}", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  # Redis Commander (GUI for Redis) - FIXED
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: app_redis_commander
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redispass}
+    ports:
+      - "8081:8081"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  # Node.js Application (Development)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app_server
+    env_file: .env
+    environment:
+      CI: "true"
+      NODE_ENV: development
+      PORT: 3001
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redispass}@redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redispass}
+      # Add NODE_PATH to help with module resolution
+      NODE_PATH: /app/node_modules
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./src:/app/src
+      - ./docs:/app/docs
+      - ./logs:/app/logs
+      - ./prisma:/app/prisma
+      - ./uploads:/app/uploads
+      - /app/node_modules
+      - /app/.pnpm-store
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - app_network
+    command: sh -c "pnpm run dev"
+    restart: unless-stopped
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+          ignore:
+            - node_modules/
+            - .git/
+            - tests/
+        - action: sync
+          path: ./docs
+          target: /app/docs
+        - action: sync
+          path: ./prisma
+          target: /app/prisma
+        - action: rebuild
+          path: ./package.json
+        - action: rebuild
+          path: ./pnpm-lock.yaml
+        - action: rebuild
+          path: ./Dockerfile
+        - action: rebuild
+          path: ./tsconfig.json
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  redis_data:
