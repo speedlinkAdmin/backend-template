@@ -49,7 +49,7 @@ src/
 
 - Node.js (v18 or higher)
 - PostgreSQL
-- pnpm or yarn
+- pnpm
 
 ### Installation
 

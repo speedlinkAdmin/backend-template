@@ -1,57 +1,66 @@
-import nodemailer from 'nodemailer';
-import { logger } from './logger';
 import { Resend } from 'resend';
+import { env } from '../configs/env.config';
+import { logger } from './logger';
+import { render } from 'jsx-email';
+import fs from 'fs';
+import path from 'path';
 
+const resend = new Resend(env.RESEND_API_KEY);
 
-// smtp transporter
-let transporter: nodemailer.Transporter | null = null;
+// Cache the logo buffer
+let logoBuffer: Buffer | null = null;
+try {
+  const logoPath = path.join(process.cwd(), 'src/assets/logo-transparent.png');
+  if (fs.existsSync(logoPath)) {
+    logoBuffer = fs.readFileSync(logoPath);
+  }
+} catch (error) {
+  logger.warn('Could not load email logo asset:', error);
+}
 
-export function getSmtpTransporter() {
-  if (!transporter) {
-    transporter = nodemailer.createTransport({
-      host: env.SMTP_HOST,
-      port: parseInt(env.SMTP_PORT || '587'),
-      auth: {
-        user: env.SMTP_USER,
-        pass: env.SMTP_PASS,
-      },
+export async function sendEmail(to: string, subject: string, html: string, attachments: any[] = []) {
+  try {
+    const finalAttachments = [...attachments];
+
+    // Automatically attach logo if cid:logo is detected in html
+    if (html.includes('cid:logo') && logoBuffer) {
+      finalAttachments.push({
+        filename: 'logo.png',
+        content: logoBuffer,
+        cid: 'logo'
+      });
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: `${env.APP_NAME || 'SpeedKonnect'} <${env.SMTP_USER || ''}>`,
+      to: [to],
+      subject,
+      html,
+      attachments: finalAttachments.map(att => ({
+        filename: att.filename,
+        content: att.content || att.path,
+        cid: att.cid
+      })),
     });
-    logger.info('SMTP transporter initialized');
+
+    if (error) {
+      logger.error('Resend email error:', error);
+      throw error;
+    }
+
+    logger.info(`Email sent to ${to}`, { messageId: data?.id });
+    return data;
+  } catch (error: any) {
+    logger.error('Failed to send email:', error.message);
+    throw error;
   }
-  return transporter;
 }
 
-
-export async function sendEmail(to: string, subject: string, html: string) {
-  const transporter = getSmtpTransporter();
-
-  const info = await transporter.sendMail({
-    from: env.EMAIL_FROM,
-    to,
-    subject,
-    html,
-  });
-
-  logger.info(`Email sent to ${to}`, { messageId: info.messageId });
-  return info;
+/**
+ * Renders a React component to an HTML string using jsx-email
+ */
+export async function renderEmail(component: any) {
+  return await render(component);
 }
 
-
-// resend transporter
-let resendTransporter: Resend | null = null;
-
-export function getResendTransporter() {
-  if (!resendTransporter) {
-    resendTransporter = new Resend(env.RESEND_API_KEY);
-    logger.info('Resend transporter initialized');
-  }
-  return resendTransporter;
-}
-
-// example
-// await resendTransporter.emails.send({
-//   from: env.EMAIL_FROM,
-//   to: ['delivered@resend.dev'],
-//   subject: 'hello world',
-//   html: '<p>it works!</p>',
-// });
+export default resend;
