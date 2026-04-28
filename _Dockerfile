@@ -2,7 +2,7 @@ FROM node:24-slim
 
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies (including build tools for bcrypt)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     wkhtmltopdf \
@@ -10,6 +10,9 @@ RUN apt-get update && \
     fonts-noto \
     ca-certificates \
     wget \
+    python3 \
+    make \
+    g++ \
     && rm -rf /var/lib/apt/lists/*
 
 # Enable Corepack for pnpm
@@ -20,6 +23,7 @@ COPY package.json pnpm-lock.yaml ./
 COPY prisma ./prisma/
 
 # Install ALL dependencies (including dev)
+# bcrypt will now compile successfully
 RUN pnpm install --frozen-lockfile --ignore-scripts
 
 # Build esbuild (required for some packages)
