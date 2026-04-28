@@ -34,9 +34,6 @@ RUN pnpm prisma:generate
 # Build the project
 RUN pnpm build
 
-# Create necessary directories
-RUN mkdir -p logs uploads
-
 # Expose port
 EXPOSE 3001
 
