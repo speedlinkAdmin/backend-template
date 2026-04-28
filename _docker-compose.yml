@@ -54,10 +54,7 @@ services:
     ports:
       - "3001:3001"
     volumes:
-      - ./src:/app/src
-      - ./docs:/app/docs
       - ./logs:/app/logs
-      - ./prisma:/app/prisma
       - ./uploads:/app/uploads
       - /app/node_modules
       - /app/.pnpm-store
