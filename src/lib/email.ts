@@ -27,7 +27,8 @@ export async function sendEmail(to: string, subject: string, html: string, attac
       finalAttachments.push({
         filename: 'logo.png',
         content: logoBuffer,
-        cid: 'logo'
+        contentId: 'logo',
+        contentType: 'image/png',
       });
     }
 
@@ -39,7 +40,8 @@ export async function sendEmail(to: string, subject: string, html: string, attac
       attachments: finalAttachments.map(att => ({
         filename: att.filename,
         content: att.content || att.path,
-        cid: att.cid
+        ...(att.contentId && { contentId: att.contentId }),
+        ...(att.contentType && { contentType: att.contentType }),
       })),
     });
 
