@@ -1,14 +1,14 @@
 {
-    "name": "express-app",
-    "version": "1.0.0",
-    "description": "Express.js application with comprehensive tooling",
+    "name": "uams-backend-v2",
+    "version": "2.0.0",
+    "description": "University Management System Backend",
     "main": "dist/server.js",
     "type": "module",
     "scripts": {
-        "dev": "nodemon --exec \"tsx\" src/server.ts",
-        "dev:watch": "nodemon --watch src --exec \"tsx\" src/server.ts",
-        "build": "tsc",
-        "start": "node dist/server.js",
+        "dev": "pnpm dlx tsx src/server.ts",
+        "dev:watch": "pnpm dlx tsx watch src/server.ts",
+        "build": "prisma generate && tsc",
+        "start": "pnpm dlx tsx --tsconfig tsconfig.json dist/src/server.js",
         "start:cluster": "node dist/cluster.js",
         "test": "jest",
         "test:watch": "jest --watch",
@@ -23,6 +23,7 @@
         "@aws-sdk/client-s3": "^3.540.0",
         "@aws-sdk/lib-storage": "^3.540.0",
         "@aws-sdk/s3-request-presigner": "^3.540.0",
+        "@img/sharp-linux-x64": "0.34.5",
         "@prisma/adapter-pg": "7.7.0",
         "@prisma/client": "7.7.0",
         "axios": "^1.14.0",
@@ -31,9 +32,11 @@
         "compression": "^1.7.4",
         "cors": "^2.8.5",
         "dotenv": "^16.3.1",
+        "exceljs": "4.4.0",
         "express": "^4.18.2",
         "express-rate-limit": "^7.1.5",
         "express-sse": "^1.0.0",
+        "googleapis": "171.4.0",
         "helmet": "^7.1.0",
         "http-status-codes": "^2.3.0",
         "ioredis": "^5.10.1",
@@ -44,15 +47,11 @@
         "multer": "^2.1.1",
         "node-cron": "^4.2.1",
         "passport": "^0.7.0",
-        "passport-facebook": "3.0.0",
-        "passport-google-oauth20": "2.0.0",
         "passport-jwt": "^4.0.1",
         "passport-local": "^1.0.0",
         "pg": "^8.11.3",
-        "react": "19.2.5",
-        "react-dom": "19.2.5",
-        "react-email": "5.2.10",
-        "resend": "6.11.0",
+        "react-dom": "18.3.1",
+        "resend": "6.12.2",
         "sharp": "^0.33.5",
         "socket.io": "^4.6.1",
         "swagger-jsdoc": "^6.2.8",
@@ -62,14 +61,11 @@
         "zod": "^3.22.4"
     },
     "devDependencies": {
-        "@express-rate-limit/tsconfig": "1.0.2",
-        "@jest/globals": "30.3.0",
+        "@jest/globals": "^29.7.0",
         "@types/bcrypt": "^6.0.0",
-        "@types/bcryptjs": "^2.4.6",
         "@types/compression": "^1.7.5",
         "@types/cors": "^2.8.17",
         "@types/express": "^4.17.21",
-        "@types/express-serve-static-core": "5.1.1",
         "@types/ioredis": "^4.28.10",
         "@types/jest": "^29.5.11",
         "@types/jsonwebtoken": "^9.0.5",
@@ -77,15 +73,11 @@
         "@types/multer": "^1.4.11",
         "@types/node": "^20.10.6",
         "@types/node-cron": "^3.0.11",
-        "@types/nodemailer": "^6.4.14",
         "@types/passport": "^1.0.16",
-        "@types/passport-facebook": "3.0.4",
-        "@types/passport-google-oauth20": "2.0.17",
         "@types/passport-jwt": "^4.0.0",
         "@types/passport-local": "^1.0.38",
         "@types/pg": "^8.20.0",
-        "@types/react": "19.2.14",
-        "@types/react-dom": "19.2.3",
+        "@types/react": "^18.2.0",
         "@types/supertest": "^6.0.2",
         "@types/swagger-jsdoc": "^6.0.4",
         "@types/swagger-ui-express": "^4.1.6",
@@ -97,13 +89,15 @@
         "nodemon": "^3.0.2",
         "prettier": "^3.1.1",
         "prisma": "7.7.0",
+        "react": "18.3.1",
         "supertest": "^7.1.3",
         "ts-jest": "^29.1.1",
         "ts-node": "^10.9.2",
+        "tsconfig-paths": "4.2.0",
         "tsx": "4.21.0",
         "typescript": "^5.3.3"
     },
-    "packageManager": "pnpm@10.33.0",
+    "packageManager": "pnpm@10.33.2",
     "engines": {
         "node": ">=24.14.1",
         "pnpm": ">=10.33.0"
@@ -118,7 +112,21 @@
     ],
     "author": "Your Name",
     "license": "MIT",
-    "prisma": {
-        "seed": "tsx prisma/seed.ts"
+    "pnpm": {
+        "onlyBuiltDependencies": [
+            "bcrypt",
+            "esbuild",
+            "sharp"
+        ],
+        "supportedArchitectures": {
+            "os": [
+                "current",
+                "linux"
+            ],
+            "cpu": [
+                "current",
+                "x64"
+            ]
+        }
     }
 }
